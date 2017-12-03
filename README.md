@@ -29,7 +29,7 @@ single letter representations of valid commands:
 * L - turn left 90 degrees but stay in the same cell
 * R - turn right 90 degrees but stay in the same cell
 
-The application will keep expecting these value pairs until it's terminated. 
+The application will keep expecting these value pairs until it's terminated. Entering any message in invalid format will result in error message and the user will be asked to re-enter the value again.
 
 # Tests
 Tests can be run using `mvn clean test` 
