@@ -32,6 +32,10 @@ public class ScannerService {
         this.scanner = scanner;
     }
 
+    /**
+     * reads coordinates on command line and returns corresponding cell
+     * @return a Cell with the coordinates provided on command line
+     */
     public Cell readCellPosition(){
         String[] parts = getCharactersWithPattern("[0-9]+ [0-9]+");
         List<Integer> coordinates = Stream.of(parts).map(Integer::valueOf).collect(toList());
@@ -39,18 +43,30 @@ public class ScannerService {
         return new Cell(coordinates.get(0), coordinates.get(1));
     }
 
+    /**
+     * reads coordinates and direction from command line and returns corresponding robot
+     * @return a robot that is based on the position provided on the command line
+     */
     public Robot readRobotPosition() {
         String[] parts = getCharactersWithPattern("[0-9]+ [0-9]+ [NESW]");
         LOG.info("created new Robot {} {} {}", parts[0], parts[1], parts[2]) ;
         return new Robot(new Cell(valueOf(parts[0]), valueOf(parts[1])), Direction.valueOf(parts[2]));
     }
 
+    /**
+     * reads a string representation of commands, checks the length and validity of commands, then returns
+     * a list of command strings
+     * @return list of strings representing commands
+     */
     public List<String> readMoveCommand() {
         String rawValue = scanner.nextLine();
+        // the max number of commands must not be exceeded
         if (rawValue.length() > 100) {
             throw new InputException("The Command sequence is too long!");
         }
+        // create a stream supplier so we can reuse it
         Supplier<Stream<String>> streamSupplier = () -> rawValue.chars().mapToObj(value -> String.valueOf((char) value));
+        // check the command is present in the Command enums
         streamSupplier.get()
                 .filter(character -> !Command.valuesAsStringList().contains(character))
                 .findAny()
@@ -63,6 +79,7 @@ public class ScannerService {
     }
 
     private String[] getCharactersWithPattern(String argPattern) {
+        // reads the input line and makes sure it conforms to requested format using regex
         String rawValue = scanner.nextLine();
         Pattern p = Pattern.compile(argPattern);
         Matcher m = p.matcher(rawValue.trim());
