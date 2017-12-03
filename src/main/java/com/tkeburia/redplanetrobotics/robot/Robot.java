@@ -28,5 +28,16 @@ public class Robot {
         private Direction direction;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(currentPosition.getCell().getXCoordinate())
+                     .append(" ")
+                     .append(currentPosition.getCell().getYCoordinate())
+                     .append(" ")
+                     .append(currentPosition.getDirection().toString())
+                     .append(lost ? " LOST": "");
+        return stringBuilder.toString();
+    }
 
 }

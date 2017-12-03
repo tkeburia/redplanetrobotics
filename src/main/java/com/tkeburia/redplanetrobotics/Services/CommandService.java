@@ -20,6 +20,20 @@ public class CommandService {
 
 
     public Robot executeCommandList(Robot inputRobot, List<String> commands, Grid grid) {
-        return null;
+        Robot.Position currentPosition = inputRobot.getCurrentPosition();
+        boolean robotLost = false;
+        for (String c : commands) {
+            Robot.Position nextPosition = Command.fromString(c).getMoveFunction().apply(currentPosition);
+            if (gridService.isCellOutOfBounds(nextPosition.getCell(), grid)) {
+                if (grid.getCellsWithScent().contains(currentPosition.getCell())) {
+                    continue;
+                }
+                robotLost = true;
+                grid.getCellsWithScent().add(currentPosition.getCell());
+                break;
+            }
+            currentPosition = nextPosition;
+        }
+        return new Robot(currentPosition, robotLost);
     }
 }

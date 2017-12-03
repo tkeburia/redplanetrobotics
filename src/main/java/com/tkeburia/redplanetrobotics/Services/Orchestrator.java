@@ -35,7 +35,13 @@ public class Orchestrator {
     }
 
     private Cell readUpperRightCellPosition(){
-        return null;
+        LOG.info("PLEASE ENTER THE UPPER RIGHT CELL COORDINATES");
+        try {
+            return scannerService.readCellPosition();
+        } catch (InputException e) {
+            LOG.error(e.getMessage());
+            return readUpperRightCellPosition();
+        }
     }
 
     private void readAndExecuteCommand(Grid grid) {
@@ -44,9 +50,19 @@ public class Orchestrator {
     }
 
     private void readAndExecuteMoveCommand(Robot robot, Grid grid) {
+        LOG.info("PLEASE ENTER THE COMMAND FOR THE ROBOT TO FOLLOW");
+        final List<String> commands = scannerService.readMoveCommand();
+        final Robot resultRobot = commandService.executeCommandList(robot, commands, grid);
+        LOG.info(String.format("NEW POSITION OF ROBOT [X Y Direction] %s", resultRobot));
     }
 
     private Robot readAndExecuteRobotCreateCommand() {
-        return null;
+        LOG.info("PLEASE ENTER ROBOT STARTING POSITION AND ORIENTATION");
+        try {
+            return scannerService.readRobotPosition();
+        } catch (InputException e) {
+            LOG.error(e.getMessage());
+            return readAndExecuteRobotCreateCommand();
+        }
     }
 }
